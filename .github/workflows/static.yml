@@ -35,6 +35,8 @@ jobs:
         uses: actions/configure-pages@v5
       - name: build
         run: npm install && npm run build
+      - name: check mulu
+        run: ls
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
