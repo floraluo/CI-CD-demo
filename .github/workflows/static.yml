@@ -45,7 +45,6 @@ jobs:
           github_token: ${{ secrets.github_token }}
           # Enable linters
           eslint: true
-          prettier: true
 
   # Single deploy job since we're just deploying
   deploy:
