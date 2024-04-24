@@ -22,46 +22,24 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  eslint:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install ESLint
-        run: |
-          npm install eslint@latest
-          npm install @microsoft/eslint-formatter-sarif@latest
-
-      - name: Run ESLint
-        run: npx eslint .
-          --config .eslintrc.js
-          --ext .js,.jsx,.ts,.tsx
-          --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
-        continue-on-error: true
-
   # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: eslint
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 使用 GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: install & build
         run: npm install && npm run build
 
+      # 打包和上传项目。 GitHub Pages 项目应该是包含单个 tar 文件的压缩 gzip 存档
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
